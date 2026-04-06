@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from grazia.core.exceptions import GraziaError
+from grazia.core.exceptions import GraziaError, KeyNotFoundError
 
 
 class GraziaStore(ABC):
@@ -10,6 +10,10 @@ class GraziaStore(ABC):
 
     @abstractmethod
     def set(self, key: str, value: str) -> None:
+        pass
+
+    @abstractmethod
+    def get(self, key: str) -> str:
         pass
 
 
@@ -29,3 +33,9 @@ class Store(GraziaStore):
             raise GraziaError("Invalid value: The value cannot be an empty string.")
 
         self._data[key] = value
+
+    def get(self, key: str) -> str:
+        if key not in self._data:
+            raise KeyNotFoundError(key)
+
+        return self._data[key]

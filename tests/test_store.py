@@ -1,6 +1,6 @@
 import pytest
 
-from grazia.core.exceptions import GraziaError
+from grazia.core.exceptions import GraziaError, KeyNotFoundError
 from grazia.core.store import GraziaStore, Store
 
 
@@ -33,6 +33,26 @@ def test_set_add_new_key_value_to_store_data():
     store.set(key="k", value="user")
     assert len(store._data) == 1
     assert store._data["k"] == "user"
+
+
+def test_get_returns_the_expected_value():
+    store = make_sut()
+    expected_key = "k"
+    expected_value = "user"
+    store.set(key=expected_key, value=expected_value)
+
+    current_value = store.get(key=expected_key)
+    assert current_value == expected_value
+
+
+def test_get_throws_if_the_key_is_not_found():
+    store = make_sut()
+    key = "new_key"
+
+    with pytest.raises(KeyNotFoundError) as exc_info:
+        store.get(key=key)
+
+    assert f"The given key '{key}' was not found." in str(exc_info.value)
 
 
 # NOTE: - Helpers methods ########################
