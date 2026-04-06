@@ -16,6 +16,10 @@ class GraziaStore(ABC):
     def get(self, key: str) -> str:
         pass
 
+    @abstractmethod
+    def delete(self, key: str) -> None:
+        pass
+
 
 class Store(GraziaStore):
     """
@@ -39,3 +43,9 @@ class Store(GraziaStore):
             raise KeyNotFoundError(key)
 
         return self._data[key]
+
+    def delete(self, key: str) -> None:
+        if key not in self._data:
+            raise KeyNotFoundError(key)
+
+        self._data.pop(key)
