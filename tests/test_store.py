@@ -15,16 +15,14 @@ def test_set_throws_if_the_key_is_empty() -> None:
     with pytest.raises(GraziaError) as exc_info:
         store.set(key="", value="user")
 
-    assert "Invalid key: The key cannot be an empty string." in str(exc_info.value)
+    assert "Invalid key: The key must be a non-empty string." in str(exc_info.value)
 
 
-def test_set_throws_if_the_value_is_empty() -> None:
+def test_set_allows_empty_values() -> None:
     store = make_sut()
+    store.set(key="k", value="")
 
-    with pytest.raises(GraziaError) as exc_info:
-        store.set(key="k", value="")
-
-    assert "Invalid value: The value cannot be an empty string." in str(exc_info.value)
+    assert store.get("k") == ""
 
 
 def test_set_add_new_key_value_to_store_data() -> None:
